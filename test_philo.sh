@@ -36,6 +36,12 @@ run_test() {
     else
         timeout $timeout_val $PHILO_EXEC $args > "$test_file" 2>&1
     fi
+    return $?
+}
+
+# Clean timestamp values (remove newlines)
+clean_timestamp() {
+    echo "$1" | tr -d '\n'
 }
 
 # Check for thread issues in output
@@ -89,7 +95,7 @@ run_valgrind() {
 # Test Cases
 # =============================================
 
-# Test Case 1: Single Philosopher
+# Test Case 1: Single Philosopher (Fixed)
 test_single_philosopher() {
     echo -e "${YELLOW}\nTEST 1: 1 800 200 200 (Single philosopher should die)${NC}"
     local args="1 800 200 200"
@@ -100,11 +106,16 @@ test_single_philosopher() {
     
     # Check results
     if grep -q "died" "$test_file"; then
-        death_time=$(grep "died" "$test_file" | awk '{print $1}')
-        if (( death_time >= time_to_die && death_time <= time_to_die + 10 )); then
-            echo -e "${GREEN}PASSED: Philosopher died at ${death_time}ms (expected ~${time_to_die}ms)${NC}"
+        # FIX: Properly clean and handle timestamp
+        death_time=$(grep "died" "$test_file" | awk '{print $1}' | tr -d '\n')
+        death_time_clean=$(clean_timestamp "$death_time")
+        
+        if [ -z "$death_time_clean" ]; then
+            echo -e "${RED}FAILED: Could not extract death time${NC}"
+        elif (( death_time_clean >= time_to_die && death_time_clean <= time_to_die + 10 )); then
+            echo -e "${GREEN}PASSED: Philosopher died at ${death_time_clean}ms (expected ~${time_to_die}ms)${NC}"
         else
-            echo -e "${RED}FAILED: Death at ${death_time}ms, expected between ${time_to_die}-$((time_to_die+10))ms${NC}"
+            echo -e "${RED}FAILED: Death at ${death_time_clean}ms, expected between ${time_to_die}-$((time_to_die+10))ms${NC}"
         fi
     else
         echo -e "${RED}FAILED: Philosopher should have died${NC}"
