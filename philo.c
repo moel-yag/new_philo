@@ -6,7 +6,7 @@
 /*   By: moel-yag <moel-yag@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 11:39:44 by moel-yag          #+#    #+#             */
-/*   Updated: 2025/07/02 17:03:06 by moel-yag         ###   ########.fr       */
+/*   Updated: 2025/07/06 19:41:56 by moel-yag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,8 @@ int	main(int ac, char **av)
 
 	stop = 0;
 	if (ac < 5 || ac > 6)
-		return (printf("Usage: %s number t_die t_eat t_sleep [meals]\n", av[0]), 1);
+		return (printf("Usage: %s number t_die t_eat t_sleep [meals]\n"
+				, av[0]), 1);
 	if (!is_valid_arg(ac, av))
 		return (printf("Error: Invalid arguments\n"), 2);
 	num_philo = ft_atoi(av[1]);
