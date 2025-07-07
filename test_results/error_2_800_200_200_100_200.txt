@@ -1,1 +1,1 @@
-Usage: ./philo <number_of_philo> <time_to_die> <time_to_eat> <time_to_sleep> [number_of_meals]
+Usage: ./philo number t_die t_eat t_sleep [meals]

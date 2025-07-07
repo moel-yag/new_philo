@@ -1,1 +1,1 @@
-Error: Philosophers must be between 1-200
+Error: Philosophers 1-200

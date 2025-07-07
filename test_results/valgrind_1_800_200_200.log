@@ -1,30 +1,30 @@
-==712343== Memcheck, a memory error detector
-==712343== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==712343== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==712343== Command: ./philo 1 800 200 200
-==712343== 
-==712343==ASan runtime does not come first in initial library list; you should either link runtime to your application or manually preload it with LD_PRELOAD.
-==712343== 
-==712343== Process terminating with default action of signal 11 (SIGSEGV)
-==712343==  General Protection Fault
-==712343==    at 0x52F3EC2: __pthread_once_slow (pthread_once.c:114)
-==712343==    by 0x53C28C2: __rpc_thread_variables (rpc_thread.c:59)
-==712343==    by 0x5415C0C: free_mem (in /usr/lib/x86_64-linux-gnu/libc.so.6)
-==712343==    by 0x5415741: __libc_freeres (in /usr/lib/x86_64-linux-gnu/libc.so.6)
-==712343==    by 0x483F1B2: _vgnU_freeres (in /usr/libexec/valgrind/vgpreload_core-amd64-linux.so)
-==712343==    by 0x4A593DF: ???
-==712343==    by 0x494F2D6: __sanitizer::Die() (sanitizer_termination.cpp:59)
-==712343==    by 0x49253B8: __asan::AsanCheckDynamicRTPrereqs() (asan_linux.cpp:181)
-==712343==    by 0x4931564: __asan::AsanInitInternal() [clone .part.0] (asan_rtl.cpp:420)
-==712343==    by 0x40065BD: _dl_init (dl-init.c:102)
-==712343==    by 0x40202C9: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-==712343==    by 0x4: ???
-==712343== 
-==712343== HEAP SUMMARY:
-==712343==     in use at exit: 0 bytes in 0 blocks
-==712343==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
-==712343== 
-==712343== All heap blocks were freed -- no leaks are possible
-==712343== 
-==712343== For lists of detected and suppressed errors, rerun with: -s
-==712343== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==811974== Memcheck, a memory error detector
+==811974== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==811974== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==811974== Command: ./philo 1 800 200 200
+==811974== 
+==811974==ASan runtime does not come first in initial library list; you should either link runtime to your application or manually preload it with LD_PRELOAD.
+==811974== 
+==811974== Process terminating with default action of signal 11 (SIGSEGV)
+==811974==  General Protection Fault
+==811974==    at 0x52F3EC2: __pthread_once_slow (pthread_once.c:114)
+==811974==    by 0x53C28C2: __rpc_thread_variables (rpc_thread.c:59)
+==811974==    by 0x5415C0C: free_mem (in /usr/lib/x86_64-linux-gnu/libc.so.6)
+==811974==    by 0x5415741: __libc_freeres (in /usr/lib/x86_64-linux-gnu/libc.so.6)
+==811974==    by 0x483F1B2: _vgnU_freeres (in /usr/libexec/valgrind/vgpreload_core-amd64-linux.so)
+==811974==    by 0x4A593DF: ???
+==811974==    by 0x494F2D6: __sanitizer::Die() (sanitizer_termination.cpp:59)
+==811974==    by 0x49253B8: __asan::AsanCheckDynamicRTPrereqs() (asan_linux.cpp:181)
+==811974==    by 0x4931564: __asan::AsanInitInternal() [clone .part.0] (asan_rtl.cpp:420)
+==811974==    by 0x40065BD: _dl_init (dl-init.c:102)
+==811974==    by 0x40202C9: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+==811974==    by 0x4: ???
+==811974== 
+==811974== HEAP SUMMARY:
+==811974==     in use at exit: 0 bytes in 0 blocks
+==811974==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==811974== 
+==811974== All heap blocks were freed -- no leaks are possible
+==811974== 
+==811974== For lists of detected and suppressed errors, rerun with: -s
+==811974== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

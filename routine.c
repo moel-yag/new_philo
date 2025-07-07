@@ -6,7 +6,7 @@
 /*   By: moel-yag <moel-yag@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 11:39:48 by moel-yag          #+#    #+#             */
-/*   Updated: 2025/07/06 19:43:47 by moel-yag         ###   ########.fr       */
+/*   Updated: 2025/07/07 14:37:32 by moel-yag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	*routine(void *arg)
 	{
 		print_status(philo, "has taken a fork");
 		precise_usleep(philo->time_to_die, philo);
-		print_status(philo, "died");
+		// print_status(philo, "died");
 		return (NULL);
 	}
 	while (1)

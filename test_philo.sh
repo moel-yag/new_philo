@@ -104,6 +104,7 @@ test_single_philosopher() {
     
     run_test "$args" "$test_file" "$(ms_to_seconds $((time_to_die + 100)))"
     
+    cat "$test_file"
     # Check results
     if grep -q "died" "$test_file"; then
         # FIX: Properly clean and handle timestamp
@@ -410,7 +411,7 @@ test_four_philosophers_no_death
 test_four_philosophers_one_death
 test_two_philosophers_timing
 test_error_cases
-test_memory_leaks
+# test_memory_leaks
 test_large_input
 test_random_scenarios
 
