@@ -6,7 +6,7 @@
 /*   By: moel-yag <moel-yag@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 11:39:48 by moel-yag          #+#    #+#             */
-/*   Updated: 2025/07/07 14:37:32 by moel-yag         ###   ########.fr       */
+/*   Updated: 2025/07/08 12:08:54 by moel-yag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,40 @@ void	take_forks(t_philo *philo)
 	}
 }
 
+/*
+void take_forks(t_philo *philo)
+{
+    pthread_mutex_t *first = (philo->id % 2) ? 
+        philo->left_fork : philo->right_fork;
+    pthread_mutex_t *second = (philo->id % 2) ? 
+        philo->right_fork : philo->left_fork;
+    
+    pthread_mutex_lock(first);
+    if (is_stopped(philo)) {
+        pthread_mutex_unlock(first);
+        return;
+    }
+    print_status(philo, "has taken a fork");
+    pthread_mutex_lock(second);
+    if (is_stopped(philo)) {
+        pthread_mutex_unlock(second);
+        pthread_mutex_unlock(first);
+        return;
+    }
+    print_status(philo, "has taken a fork");
+}
+
+// Add helper function (static to respect 5-function limit)
+static int is_stopped(t_philo *philo)
+{
+    int stop_status;
+    pthread_mutex_lock(philo->stop_mutex);
+    stop_status = *(philo->stop);
+    pthread_mutex_unlock(philo->stop_mutex);
+    return (stop_status);
+}
+*/
+
 void	eat(t_philo *philo)
 {
 	print_status(philo, "is eating");
@@ -49,7 +83,6 @@ void	*routine(void *arg)
 	{
 		print_status(philo, "has taken a fork");
 		precise_usleep(philo->time_to_die, philo);
-		// print_status(philo, "died");
 		return (NULL);
 	}
 	while (1)
@@ -91,44 +124,4 @@ void	check_death(t_sim *sim, int i)
 	}
 	else
 		pthread_mutex_unlock(&sim->philos[i].meal_mutex);
-}
-
-void	*monitor(void *arg)
-{
-	t_sim	*sim;
-	int		i;
-	int		all_full;
-
-	sim = (t_sim *)arg;
-	while (1)
-	{
-		i = -1;
-		all_full = 1;
-		while (++i < sim->num_philo)
-		{
-			check_death(sim, i);
-			pthread_mutex_lock(sim->stop_mutex);
-			if (*(sim->stop))
-			{
-				pthread_mutex_unlock(sim->stop_mutex);
-				return (NULL);
-			}
-			pthread_mutex_unlock(sim->stop_mutex);
-			if (sim->meal_target > 0)
-			{
-				pthread_mutex_lock(&sim->philos[i].meal_mutex);
-				if (sim->philos[i].meals_eaten < sim->meal_target)
-					all_full = 0;
-				pthread_mutex_unlock(&sim->philos[i].meal_mutex);
-			}
-		}
-		if (sim->meal_target > 0 && all_full)
-		{
-			pthread_mutex_lock(sim->stop_mutex);
-			*(sim->stop) = 1;
-			pthread_mutex_unlock(sim->stop_mutex);
-			return (NULL);
-		}
-		usleep(1000);
-	}
 }
