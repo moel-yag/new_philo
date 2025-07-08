@@ -6,7 +6,7 @@
 /*   By: moel-yag <moel-yag@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 12:08:44 by moel-yag          #+#    #+#             */
-/*   Updated: 2025/07/08 12:12:02 by moel-yag         ###   ########.fr       */
+/*   Updated: 2025/07/08 12:22:24 by moel-yag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,10 @@ void	check_death(t_sim *sim, int i)
 		pthread_mutex_unlock(&sim->philos[i].meal_mutex);
 }
 
-void	*monitor(void *arg)
+void	monitor_loop(t_sim *sim, int *all_full)
 {
-	t_sim	*sim;
-	int		i;
-	int		all_full;
+	int	i;
 
-	sim = (t_sim *)arg;
 	while (1)
 	{
 		i = -1;
@@ -71,4 +68,13 @@ void	*monitor(void *arg)
 		}
 		usleep(1000);
 	}
+}
+
+void	*monitor(void *arg)
+{
+	t_sim	*sim;
+	int		all_full;
+
+	sim = (t_sim *)arg;
+	monitor_loop(sim, &all_full);
 }
