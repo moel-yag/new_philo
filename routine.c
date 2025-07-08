@@ -6,7 +6,7 @@
 /*   By: moel-yag <moel-yag@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 11:39:48 by moel-yag          #+#    #+#             */
-/*   Updated: 2025/07/08 12:08:54 by moel-yag         ###   ########.fr       */
+/*   Updated: 2025/07/08 12:11:52 by moel-yag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,25 +103,4 @@ void	*routine(void *arg)
 		print_status(philo, "is thinking");
 	}
 	return (NULL);
-}
-
-void	check_death(t_sim *sim, int i)
-{
-	pthread_mutex_lock(&sim->philos[i].meal_mutex);
-	if (get_time() - sim->philos[i].last_meal > sim->time_to_die)
-	{
-		pthread_mutex_lock(sim->stop_mutex);
-		if (!*(sim->stop))
-		{
-			*(sim->stop) = 1;
-			pthread_mutex_lock(sim->print_mutex);
-			printf("%lld %d died\n", get_time() - sim->philos[i].start_time,
-				sim->philos[i].id);
-			pthread_mutex_unlock(sim->print_mutex);
-		}
-		pthread_mutex_unlock(sim->stop_mutex);
-		pthread_mutex_unlock(&sim->philos[i].meal_mutex);
-	}
-	else
-		pthread_mutex_unlock(&sim->philos[i].meal_mutex);
 }
