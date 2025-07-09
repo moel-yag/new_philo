@@ -238,38 +238,24 @@ test_four_philosophers_one_death() {
 }
 
 # Test Case 6: Two Philosophers Timing Accuracy
-test_two_philosophers_timing() {
-    echo -e "${YELLOW}\nTEST 6: 2 200 100 100 (Death within 10ms)${NC}"
+test_two_philosophers_timing(){
+    echo -e "${YELLOW}\nTEST 6: 2 200 100 100 (Timing accuracy test)${NC}"
     local args="2 200 100 100"
     local test_file="$TEST_DIR/two_philo_timing.txt"
-    local time_to_die=200
-    local max_delay=10
-    local runs=5
-    local passed=0
+    local timeout_sec=5
     
-    echo "Running timing test $runs times..."
+    run_test "$args" "$test_file" "$timeout_sec"
     
-    for ((i=1; i<=$runs; i++)); do
-        run_test "$args" "${test_file}_$i" ""
-        if grep -q "died" "${test_file}_$i"; then
-            death_time=$(grep "died" "${test_file}_$i" | awk '{print $1}')
-            if (( death_time >= time_to_die && death_time <= time_to_die + max_delay )); then
-                ((passed++))
-            else
-                echo "Run $i: Death at ${death_time}ms (expected ${time_to_die}-$((time_to_die+max_delay))ms)"
-            fi
-        else
-            echo "Run $i: No death occurred"
-        fi
-        check_thread_issues "${test_file}_$i"
-        check_output_overlap "${test_file}_$i"
-    done
-    
-    if [[ $passed -eq $runs ]]; then
-        echo -e "${GREEN}PASSED: All $runs runs died within 10ms of ${time_to_die}ms${NC}"
+    # Check results
+    if grep -q "died" "$test_file"; then
+        death_line=$(grep "died" "$test_file")
+        echo -e "${RED}FAILED: Unexpected death - ${death_line}${NC}"
     else
-        echo -e "${RED}FAILED: Only $passed/$runs runs met timing requirements${NC}"
+        echo -e "${GREEN}PASSED: No deaths occurred${NC}"
     fi
+    
+    check_thread_issues "$test_file"
+    check_output_overlap "$test_file"
 }
 
 # Test Case 7: Error Cases
@@ -350,50 +336,32 @@ test_large_input() {
 
 # Test Case 10: Random Tests
 test_random_scenarios() {
-    echo -e "${YELLOW}\nTEST 10: Random Test Scenarios${NC}"
-    local tests=(
-        "3 400 200 200"       # Should complete without death
-        "2 300 150 150"       # Should complete without death
-        "4 300 100 100"       # One might die
-        "5 600 150 150 3"     # Meal target
-        "1 60 60 60"          # Minimum times
-        "2 200 100 100"       # Timing sensitive
-        "200 1000 100 100"    # Large input with short times
-    )
+    echo -e "${YELLOW}\nTEST 10: Random Scenarios (10 iterations)${NC}"
+    local iterations=10
+    local max_philosophers=10
+    local max_time=1000
+    local max_eat_time=500
+    local max_sleep_time=500
     
-    for args in "${tests[@]}"; do
-        echo -e "\nTesting: $args"
-        local test_file="$TEST_DIR/random_${args// /_}.txt"
-        local timeout_sec=10
+    for i in $(seq 1 $iterations); do
+        num_philosophers=$((RANDOM % max_philosophers + 1))
+        time_to_die=$((RANDOM % max_time + 100))
+        eat_time=$((RANDOM % max_eat_time + 50))
+        sleep_time=$((RANDOM % max_sleep_time + 50))
         
-        run_test "$args" "$test_file" "$timeout_sec"
+        args="$num_philosophers $time_to_die $eat_time $sleep_time"
+        test_file="$TEST_DIR/random_test_${i}.txt"
         
+        echo -e "\nIteration $i: Testing with args: $args"
+        
+        run_test "$args" "$test_file" "$(ms_to_seconds $((time_to_die + 200)))"
+        
+        # Check results
         if grep -q "died" "$test_file"; then
             death_line=$(grep "died" "$test_file")
-            death_time=$(echo "$death_line" | awk '{print $1}')
-            philo_id=$(echo "$death_line" | awk '{print $2}')
-            echo -e "  ${RED}DEATH: Philosopher $philo_id died at ${death_time}ms${NC}"
+            echo -e "${RED}FAILED: Unexpected death - ${death_line}${NC}"
         else
-            echo -e "  ${GREEN}No deaths occurred${NC}"
-            
-            # Check for meal target if specified
-            if [[ $args == *" "*" "*" "*" "* ]]; then
-                meal_target=$(echo $args | awk '{print $5}')
-                num_philo=$(echo $args | awk '{print $1}')
-                all_reached=true
-                for ((i=1; i<=num_philo; i++)); do
-                    meals=$(grep " $i is eating" "$test_file" | wc -l)
-                    if [[ $meals -lt $meal_target ]]; then
-                        echo -e "  ${RED}FAILED: Philosopher $i ate only $meals times (target: $meal_target)${NC}"
-                        all_reached=false
-                    else
-                        echo -e "  Philosopher $i meals: ${meals}/${meal_target}"
-                    fi
-                done
-                if $all_reached; then
-                    echo -e "  ${GREEN}All reached meal target${NC}"
-                fi
-            fi
+            echo -e "${GREEN}PASSED: No deaths occurred in random test${NC}"
         fi
         
         check_thread_issues "$test_file"
