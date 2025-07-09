@@ -6,7 +6,7 @@
 /*   By: moel-yag <moel-yag@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 19:44:06 by moel-yag          #+#    #+#             */
-/*   Updated: 2025/07/07 09:22:57 by moel-yag         ###   ########.fr       */
+/*   Updated: 2025/07/09 17:51:00 by moel-yag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,15 @@ void	print_status(t_philo *philo, const char *status)
 {
 	long long	timestamp;
 
-	pthread_mutex_lock(philo->print_mutex);
-	timestamp = get_time() - philo->start_time;
-	printf("%lld %d %s\n", timestamp, philo->id, status);
-	pthread_mutex_unlock(philo->print_mutex);
+	pthread_mutex_lock(philo->stop_mutex);
+	if (!*(philo->stop))
+	{
+		pthread_mutex_lock(philo->print_mutex);
+		timestamp = get_time() - philo->start_time;
+		printf("%lld %d %s\n", timestamp, philo->id, status);
+		pthread_mutex_unlock(philo->print_mutex);
+	}
+	pthread_mutex_unlock(philo->stop_mutex);
 }
 
 void	precise_usleep(long duration, t_philo *philo)

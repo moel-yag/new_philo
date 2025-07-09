@@ -6,7 +6,7 @@
 /*   By: moel-yag <moel-yag@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 11:40:00 by moel-yag          #+#    #+#             */
-/*   Updated: 2025/07/08 12:11:18 by moel-yag         ###   ########.fr       */
+/*   Updated: 2025/07/09 17:46:41 by moel-yag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 typedef struct s_philo
 {
 	pthread_mutex_t	*left_fork;
+	int 			leftfork_id;
+	int				rightfork_id;
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	*stop_mutex;
 	pthread_mutex_t	*print_mutex;
@@ -51,6 +53,7 @@ typedef struct s_sim
 }					t_sim;
 
 long long			get_time(void);
+void				check_death(t_sim *sim, int i);
 void				*routine(void *arg);
 bool				is_valid_arg(int ac, char *args[]);
 long long			ft_atoi(const char *str);

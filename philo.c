@@ -6,7 +6,7 @@
 /*   By: moel-yag <moel-yag@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 11:39:44 by moel-yag          #+#    #+#             */
-/*   Updated: 2025/07/07 16:46:07 by moel-yag         ###   ########.fr       */
+/*   Updated: 2025/07/09 17:47:10 by moel-yag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,9 @@ void	init_philos(t_philo *philos, pthread_mutex_t *forks,
 		philos[i].meals_eaten = 0;
 		philos[i].last_meal = start;
 		philos[i].left_fork = &forks[i];
+		philos[i].leftfork_id = i + 1;
 		philos[i].right_fork = &forks[(i + 1) % num_philo];
+		philos[i].rightfork_id = (i + 1) % num_philo + 1;
 		philos[i].stop = sim->stop;
 		philos[i].stop_mutex = sim->stop_mutex;
 		philos[i].print_mutex = sim->print_mutex;
@@ -115,12 +117,10 @@ int	main(int ac, char **av)
 	if (start_threads(philos, &monitor_thread, &sim, num_philo))
 		return (printf("Error: Thread creation failed\n"), 4);
 	pthread_join(monitor_thread, NULL);
-	/*
 	// Add after pthread_join(monitor_thread, NULL);
 	int i = -1;
 	while (++i < num_philo)
 		pthread_join(philos[i].threads, NULL);
-	*/
 	cleanup(philos, forks, &stop_mutex, &print_mutex, num_philo);
 	return (0);
 }
