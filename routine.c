@@ -6,46 +6,46 @@
 /*   By: moel-yag <moel-yag@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 11:39:48 by moel-yag          #+#    #+#             */
-/*   Updated: 2025/07/09 17:44:19 by moel-yag         ###   ########.fr       */
+/*   Updated: 2025/07/09 18:42:00 by moel-yag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	print_status2(t_philo *philo, const char *status, int fork_id)
-{
-	long long	timestamp;
+// void	print_status2(t_philo *philo, const char *status, int fork_id)
+// {
+// 	long long	timestamp;
 
-	pthread_mutex_lock(philo->stop_mutex);
-	if (!*(philo->stop))
-	{
-		pthread_mutex_lock(philo->print_mutex);
-		timestamp = get_time() - philo->start_time;
-		printf("%lld %d %s %d\n", timestamp, philo->id, status, fork_id);
-		pthread_mutex_unlock(philo->print_mutex);
-	}
-	pthread_mutex_unlock(philo->stop_mutex);
-}
+// 	pthread_mutex_lock(philo->stop_mutex);
+// 	if (!*(philo->stop))
+// 	{
+// 		pthread_mutex_lock(philo->print_mutex);
+// 		timestamp = get_time() - philo->start_time;
+// 		printf("%lld %d %s %d\n", timestamp, philo->id, status, fork_id);
+// 		pthread_mutex_unlock(philo->print_mutex);
+// 	}
+// 	pthread_mutex_unlock(philo->stop_mutex);
+// }
 
 void	take_forks(t_philo *philo)
 {
 	if (philo->id % 2 != 0)
 	{
 		pthread_mutex_lock(philo->right_fork);
-		// print_status(philo, "has taken a fork (right)");
-		print_status2(philo, "has taken a fork (right)", philo->rightfork_id);
+		print_status(philo, "has taken a fork");
+		// print_status2(philo, "has taken a fork (right)", philo->rightfork_id);
 		pthread_mutex_lock(philo->left_fork);
-		print_status2(philo, "has taken a fork (right)", philo->leftfork_id);
-		// print_status(philo, "has taken a fork (left)");
+		// print_status2(philo, "has taken a fork (right)", philo->leftfork_id);
+		print_status(philo, "has taken a fork");
 	}
 	else
 	{
 		pthread_mutex_lock(philo->left_fork);
-		print_status2(philo, "has taken a fork (right)", philo->leftfork_id);
-		// print_status(philo, "has taken a fork (left)");
+		// print_status2(philo, "has taken a fork (right)", philo->leftfork_id);
+		print_status(philo, "has taken a fork");
 		pthread_mutex_lock(philo->right_fork);
-		print_status2(philo, "has taken a fork (right)", philo->rightfork_id);
-		// print_status(philo, "has taken a fork (right)");
+		// print_status2(philo, "has taken a fork (right)", philo->rightfork_id);
+		print_status(philo, "has taken a fork");
 	}
 }
 

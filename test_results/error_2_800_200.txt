@@ -1,0 +1,1 @@
+Usage: ./philo number t_die t_eat t_sleep [meals]

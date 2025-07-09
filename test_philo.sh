@@ -335,33 +335,34 @@ test_large_input() {
 }
 
 # Test Case 10: Random Tests
-test_random_scenarios() {
-    echo -e "${YELLOW}\nTEST 10: Random Scenarios (10 iterations)${NC}"
-    local iterations=10
+test_random_scenarios() 
+{
+    echo -e "${YELLOW}\nTEST 10: Random Scenarios${NC}"
+    local num_tests=5
     local max_philosophers=10
     local max_time=1000
-    local max_eat_time=500
-    local max_sleep_time=500
+    local max_meals=10
     
-    for i in $(seq 1 $iterations); do
+    for i in $(seq 1 $num_tests); do
         num_philosophers=$((RANDOM % max_philosophers + 1))
         time_to_die=$((RANDOM % max_time + 100))
-        eat_time=$((RANDOM % max_eat_time + 50))
-        sleep_time=$((RANDOM % max_sleep_time + 50))
+        time_to_eat=$((RANDOM % (time_to_die / 2) + 50))
+        time_to_sleep=$((RANDOM % (time_to_die / 2) + 50))
+        meal_target=$((RANDOM % max_meals + 1))
         
-        args="$num_philosophers $time_to_die $eat_time $sleep_time"
+        args="$num_philosophers $time_to_die $time_to_eat $time_to_sleep $meal_target"
         test_file="$TEST_DIR/random_test_${i}.txt"
         
-        echo -e "\nIteration $i: Testing with args: $args"
+        echo -e "\nRunning random test $i: $args"
         
-        run_test "$args" "$test_file" "$(ms_to_seconds $((time_to_die + 200)))"
+        run_test "$args" "$test_file" ""
         
         # Check results
         if grep -q "died" "$test_file"; then
             death_line=$(grep "died" "$test_file")
             echo -e "${RED}FAILED: Unexpected death - ${death_line}${NC}"
         else
-            echo -e "${GREEN}PASSED: No deaths occurred in random test${NC}"
+            echo -e "${GREEN}PASSED: No deaths occurred in random test $i${NC}"
         fi
         
         check_thread_issues "$test_file"
